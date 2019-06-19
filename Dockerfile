@@ -1,6 +1,7 @@
 FROM tomcat:8.0-jre8
 VOLUME /tmp
 
+## timedatectl list-timezones |grep Shanghai    #find time zones name
 ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
@@ -17,7 +18,7 @@ RUN sed -i 's/8005/-1/g' ${TOMCAT_HOME}/conf/server.xml \
 ADD ${WAR_FILE} ROOT.war
 
 RUN set -e \
-    && rm -rf ${TOMCAT_HOME}/webapps/* && unzip -d ${TOMCAT_HOME}/webapps/${CONTEXT_PATH} ROOT.war && rm ROOT.war
+    && rm -rf ${TOMCAT_HOME}/webapps/* && unzip -q -d ${TOMCAT_HOME}/webapps/${CONTEXT_PATH} ROOT.war && rm ROOT.war
 
 
 COPY config/ ${TOMCAT_HOME}/webapps/${CONTEXT_PATH}/WEB-INF/
