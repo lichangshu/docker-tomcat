@@ -1,5 +1,4 @@
 FROM tomcat:8.0-jre8
-VOLUME /tmp
 
 ## timedatectl list-timezones |grep Shanghai    #find time zones name
 ENV TZ=Asia/Shanghai
@@ -20,10 +19,11 @@ ADD ${WAR_FILE} ROOT.war
 RUN set -e \
     && rm -rf ${TOMCAT_HOME}/webapps/* && unzip -q -d ${TOMCAT_HOME}/webapps/${CONTEXT_PATH} ROOT.war && rm ROOT.war
 
-
 COPY config/ ${TOMCAT_HOME}/webapps/${CONTEXT_PATH}/WEB-INF/
 
 EXPOSE $PORT
+VOLUME /tmp
+VOLUME ${TOMCAT_HOME}/webapps/
 
 ## ["",""] 格式可以实现  docker 优雅关机
 
