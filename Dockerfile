@@ -12,7 +12,11 @@ ENV TOMCAT_HOME=/usr/local/tomcat
 
 RUN sed -i 's/8005/-1/g' ${TOMCAT_HOME}/conf/server.xml \
     && sed -i /8009/d ${TOMCAT_HOME}/conf/server.xml \
-    && sed -i "s/8080/${PORT}/g" ${TOMCAT_HOME}/conf/server.xml
+    && sed -i "s/8080/${PORT}/g" ${TOMCAT_HOME}/conf/server.xml \
+    && sed -i '/\/Host/i\        <Valve className="org.apache.catalina.valves.RemoteIpValve"' ${TOMCAT_HOME}/conf/server.xml \
+    && sed -i '/\/Host/i\               protocolHeader="X-Forwarded-Proto"' ${TOMCAT_HOME}/conf/server.xml \
+    && sed -i '/\/Host/i\               remoteIpHeader="X-Forwarded-For"' ${TOMCAT_HOME}/conf/server.xml \
+    && sed -i '/\/Host/i\               protocolHeaderHttpsValue="https" />' ${TOMCAT_HOME}/conf/server.xml
 
 ADD ${WAR_FILE} ROOT.war
 
